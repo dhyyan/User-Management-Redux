@@ -1,41 +1,3 @@
-// import React from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
-// import type { RootState } from "../Store/store"
-// import { useNavigate, Link } from 'react-router-dom'
-// import { removeUser } from '../Store/Slice/user/authSlice'
-
-// const Home = () => {
-//     const user = useSelector((state: RootState) => state.auth.user)
-//     const dispatch = useDispatch()
-//     const navigate = useNavigate()
-//     const handlesubmit = () => {
-//         navigate('/profile')
-//     }
-
-//     const logout=()=>{
-//         navigate('/login')
-//         dispatch(removeUser())
-//     }
-//     return (
-//         <div>
-//             <h2>User Dashboard</h2>
-//             <h1>myname is{user?.name}</h1>
-
-
-//             <div>
-//                 {user ? <div>
-//                     <img src={user?.profile} alt="gfjk" />
-//                     <button onClick={() => handlesubmit()}>Profile</button>
-//                     <button onClick={()=>logout()}>Logout</button>
-//                 </div> : ""}
-
-//             </div>
-
-//         </div>
-//     )
-// }
-
-// export default Home
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from "../Store/store"
@@ -58,7 +20,7 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-            {/* Header with Profile/Logout */}
+            
             <div className="flex justify-between items-center p-6">
                 <div className="flex items-center">
                     <h1 className="text-3xl font-bold text-gray-800">User Dashboard</h1>
@@ -66,7 +28,7 @@ const Home = () => {
                 
                 {user && (
                     <div className="flex items-center bg-blue-500 rounded-2xl p-2 shadow-lg">
-                        {/* Profile Section */}
+                        
                         <button 
                             onClick={handlesubmit}
                             className="flex items-center space-x-3 bg-transparent hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-colors duration-200"
@@ -79,7 +41,7 @@ const Home = () => {
                             <span className="font-medium">Profile</span>
                         </button>
                         
-                        {/* Logout Button */}
+                        
                         <button 
                             onClick={logout}
                             className="bg-red-500 hover:bg-red-600 text-white font-medium px-6 py-2 rounded-xl ml-2 transition-colors duration-200 shadow-md"
@@ -93,7 +55,7 @@ const Home = () => {
             <div className="px-6">
                 {user ? (
                     <div className="max-w-4xl mx-auto">
-                        {/* Welcome Card */}
+                        
                         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
                             <div className="text-center">
                                 <div className="mb-6">

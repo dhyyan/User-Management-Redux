@@ -1,54 +1,3 @@
-// import React, { useState, type FormEvent } from 'react'
-// import type  User  from '../types/User'
-// import {api} from '../Axios/axios'
-// import { useNavigate } from 'react-router-dom'
-// const SignUp = () => {
-//     const [name,setName]=useState('')
-//     const [email,setEmail]=useState('')
-//     const [password,setPassword]=useState('')
-    
-    
-//     const navigate=useNavigate()
-
-
-//     const handleSubmit=async(e:FormEvent<HTMLFormElement>)=>{
-//         e.preventDefault()
-//         if(!name||!email||!password){
-//             return console.log("must fill all fields")
-//         }
-//         try {
-//             const response =await api.post<User>('signup',{
-//                 name,
-//                 email,
-//                 password
-//             })
-
-//             console.log("signup successfully",response.data)
-//             navigate('/login')
-
-//         } catch (error) {
-            
-//         }
-//     }
-//     return (
-//         <div>
-//             <h1>Signup</h1>
-//             <form onSubmit={(e)=>handleSubmit(e)}>
-//                 <label htmlFor="">Name</label>
-//                 <input type="name" placeholder='Enter your name' onChange={(e)=>setName(e.target.value)} />
-//                 <label htmlFor="">Email</label>
-//                 <input type="email" placeholder='email' onChange={(e)=>setEmail(e.target.value)} />
-//                 <label htmlFor="">Password</label>
-//                 <input type="password" placeholder='password'onChange={(e)=>setPassword(e.target.value)} />
-//                 <button type='submit'>Sign Up</button>
-//             </form>
-//         </div>
-//     )
-// }
-
-// export default SignUp
-
-
 import React, { useState, type FormEvent } from 'react'
 import type User from '../types/User'
 import { api } from '../Axios/axios'
@@ -72,7 +21,6 @@ const SignUp = () => {
             return
         }
         
-        // Basic password validation
         if (password.length < 6) {
             setError("Password must be at least 6 characters long")
             return
@@ -108,14 +56,12 @@ const SignUp = () => {
                         <p className="text-gray-600">Join us today</p>
                     </div>
 
-                    {/* Error Message */}
                     {error && (
                         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                             <p className="text-red-600 text-sm">{error}</p>
                         </div>
                     )}
 
-                    {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -182,7 +128,7 @@ const SignUp = () => {
                         </button>
                     </form>
 
-                    {/* Footer */}
+
                     <div className="mt-8 text-center">
                         <p className="text-sm text-gray-600">
                             Already have an account?{' '}
