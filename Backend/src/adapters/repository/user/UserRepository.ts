@@ -4,6 +4,9 @@ import { IUserRepository } from "../../../domain/interface/IUsecaseInterface/use
 
 
 export class UserRepository implements IUserRepository{
+    findByIdAndDelete(id: string): Promise<User|null> {
+        return userModal.findByIdAndDelete(id)
+    }
     async createUser(user: User): Promise<User> {
         return userModal.create(user)
     }
@@ -11,11 +14,13 @@ export class UserRepository implements IUserRepository{
         return userModal.findOne({email})
     }
     async findUserById(id: string): Promise<User | null> {
-        return userModal.findById({id})
+        return userModal.findById(id)
     }
     async updateUser(id: string, user: Partial<User>): Promise<User | null> {
-        console.log(user)
         return userModal.findByIdAndUpdate(id,user,{new:true})
+    }
+    async findAll():Promise<User[]|null>{
+    return userModal.find({role:"user"});
     }
 
 }

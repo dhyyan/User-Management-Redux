@@ -10,12 +10,11 @@ export class UpdateUserUsecas implements IupdateUserUsecase{
     }
     async updateUser(userData:User): Promise<User | null> {
         const user=await this.repo.findUserByEmail(userData.email)
-
+        console.log("edit user",user)
         if (!user){
             throw new Error("User not found or update failed");
         }
-       
-        console.log("UserProfile update ",user)
+        
         const update = await this.repo.updateUser(user.id?.toString()!,userData)
         return update
     }

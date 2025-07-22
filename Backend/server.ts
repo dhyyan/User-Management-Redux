@@ -1,8 +1,9 @@
 import dotenv from 'dotenv'
 import cors from 'cors'
-import express, { Application, urlencoded } from 'express'
+import express, { Application, NextFunction, urlencoded,Request,Response } from 'express'
 import { UserRoutes } from './src/framework/routes/user/UserRoutes';
 import { Database } from './src/framework/database/Database';
+import { AdminRoute } from './src/framework/routes/admin/AdminRoutes';
 dotenv.config()
 
 
@@ -18,6 +19,7 @@ export class Server {
         this.port = process.env.PORT || 3000
         this.middleware()
         this.Routes()
+        this.AdminRoute()
         this.connectDB()
     }
 
@@ -30,10 +32,15 @@ export class Server {
         this.app.use(cors({ origin: "http://localhost:5173" }))
         this.app.use(urlencoded())
         this.app.use(express.json())
+       
     }
 
     private Routes() {
         this.app.use('/', new UserRoutes().userRoutes)
+    }
+
+    private AdminRoute(){
+        this.app.use('/admin/', new AdminRoute().adminRoutes)
     }
 
     

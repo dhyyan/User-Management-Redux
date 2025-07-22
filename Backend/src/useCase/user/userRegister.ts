@@ -17,6 +17,7 @@ export class UseCaseRegister implements IRegesterInterface {
         if (exist) {
             throw new Error("Email already exist")
         }
+
         const hashPassword = await bcrypt.hash(user.password,10)
         const result = await this.repo.createUser({...user,password:hashPassword})
         return result
