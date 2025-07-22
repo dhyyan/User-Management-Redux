@@ -1,31 +1,62 @@
 import axios from 'axios'
 import type { RootState } from '../../Store/store'
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { api } from '../../Axios/axios'
-import { addUser } from '../../Store/Slice/user/authSlice'
+import React, { useEffect, useState } from 'react'
 
-const Profile = () => {
-    const user = useSelector((state: RootState) => state.auth.user)
-    const dispatch = useDispatch()
-    const [ImageUrl, setImageUrl] = useState(user?.profile)
-    const [name, setName] = useState(user?.name)
-    const [email, setEmail] = useState(user?.email)
-    const [phone, setPhone] = useState(user?.phone)
+import { api } from '../../Axios/AdminAxios'
+import { useParams } from 'react-router-dom'
+import type User from '../../types/User'
+
+
+const EditUser = () => {
+    const [user, setUser] = useState<User | null>(null)
+    const { id } = useParams();
+    const [ImageUrl, setImageUrl] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [isUploading, setIsUploading] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    console.log("nameeee", name)
+
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!id) return;
+            console.log("idddd", id);
+
+            try {
+                const result = await api.get(`/admin/updateUser/${id}`);
+                console.log("fetched user data", result?.data?.userData);
+                setUser(result?.data?.userData);
+            } catch (error) {
+                console.error("API fetch failed", error);
+            }
+        };
+
+        fetchUser();
+    }, [id]);
+    useEffect(() => {
+        if (user) {
+            setName(user?.name);
+            setEmail(user?.email);
+            setPhone(user?.phone!);
+            setImageUrl(user.profile!);
+        }
+    }, [user]);
+    console.log("stasttete", user?.name)
 
     const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) {
             return
         }
-        
+
         setIsUploading(true)
         setError('')
-        
+
         console.log("not file", file)
         const data = new FormData()
         data.append("file", file)
@@ -51,19 +82,17 @@ const Profile = () => {
         e.preventDefault()
         setError('')
         setSuccess('')
-        
+
         if (!name || !email || !phone || !ImageUrl) {
             setError("All fields are required including profile picture")
             return
         }
-        
+
         setIsUpdating(true)
-        
+
         const userData = { name, profile: ImageUrl, phone, email }
         try {
             const res = await api.patch('updateProfile', { userData })
-            dispatch(addUser(res.data.user))
-            console.log("upd", user)
             console.log("aaaaaaaaaa", res.data.user)
             setSuccess('Profile updated successfully!')
         } catch (error) {
@@ -79,8 +108,8 @@ const Profile = () => {
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-6">
-                        <h1 className="text-3xl font-bold text-white">Edit Profile</h1>
-                        <p className="text-purple-100 mt-2">Update your personal information</p>
+                        <h1 className="text-3xl font-bold text-white">Edit User Profile</h1>
+                        <p className="text-purple-100 mt-2">Update User personal information</p>
                     </div>
 
                     <div className="px-8 py-8">
@@ -90,7 +119,7 @@ const Profile = () => {
                                 <p className="text-green-600 text-sm">{success}</p>
                             </div>
                         )}
-                        
+
                         {error && (
                             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                                 <p className="text-red-600 text-sm">{error}</p>
@@ -101,9 +130,9 @@ const Profile = () => {
                             {/* Profile Picture Section */}
                             <div className="flex flex-col items-center space-y-4">
                                 <div className="relative">
-                                    <img 
-                                        src={ImageUrl || "https://t3.ftcdn.net/jpg/07/95/95/14/360_F_795951406_h17eywwIo36DU2L8jXtsUcEXqPeScBUq.jpg"} 
-                                        alt="Profile" 
+                                    <img
+                                        src={ImageUrl || "https://t3.ftcdn.net/jpg/07/95/95/14/360_F_795951406_h17eywwIo36DU2L8jXtsUcEXqPeScBUq.jpg"}
+                                        alt="Profile"
                                         className="w-32 h-32 rounded-full object-cover border-4 border-purple-200 shadow-lg"
                                     />
                                     {isUploading && (
@@ -112,10 +141,10 @@ const Profile = () => {
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 <div className="relative">
-                                    <input 
-                                        type="file" 
+                                    <input
+                                        type="file"
                                         onChange={handleUpload}
                                         disabled={isUploading || isUpdating}
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
@@ -137,14 +166,14 @@ const Profile = () => {
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                                         Full Name
                                     </label>
-                                    <input 
+                                    <input
                                         id="name"
-                                        type="text" 
-                                        value={name || ''} 
+                                        type="text"
+                                        value={name || ''}
                                         onChange={(e) => setName(e.target.value)}
                                         disabled={isUpdating}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors disabled:bg-gray-50 disabled:text-gray-500"
-                                        placeholder="Enter your full name"
+                                        placeholder="Enter full name"
                                     />
                                 </div>
 
@@ -152,14 +181,14 @@ const Profile = () => {
                                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                                         Phone Number
                                     </label>
-                                    <input 
+                                    <input
                                         id="phone"
-                                        type="tel" 
-                                        value={phone || ''} 
+                                        type="tel"
+                                        value={phone || ''}
                                         onChange={(e) => setPhone(e.target.value)}
                                         disabled={isUpdating}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors disabled:bg-gray-50 disabled:text-gray-500"
-                                        placeholder="Enter your phone number"
+                                        placeholder="Enter phone number"
                                     />
                                 </div>
                             </div>
@@ -168,20 +197,20 @@ const Profile = () => {
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                                     Email Address
                                 </label>
-                                <input 
+                                <input
                                     id="email"
-                                    type="email" 
-                                    value={email || ''} 
+                                    type="email"
+                                    value={email || ''}
                                     onChange={(e) => setEmail(e.target.value)}
                                     disabled={isUpdating}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors disabled:bg-gray-50 disabled:text-gray-500"
-                                    placeholder="Enter your email address"
+                                    placeholder="Enter email address"
                                 />
                             </div>
 
                             {/* Submit Button */}
                             <div className="flex justify-center pt-6">
-                                <button 
+                                <button
                                     type="submit"
                                     disabled={isUpdating || isUploading}
                                     className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed"
@@ -207,4 +236,4 @@ const Profile = () => {
     )
 }
 
-export default Profile
+export default EditUser

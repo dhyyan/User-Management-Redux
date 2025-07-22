@@ -36,7 +36,7 @@ const Login = () => {
             dispatch(addUser(response.data.user))
             dispatch(storeToken(response.data.token))
 
-            navigate('/home')
+            navigate('/home',{replace:true})
         } catch (error: any) {
             console.log(error)
             setError(error.response?.data?.message || "Login failed. Please try again.")

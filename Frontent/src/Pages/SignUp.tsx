@@ -36,7 +36,7 @@ const SignUp = () => {
             })
 
             console.log("signup successfully", response.data)
-            navigate('/login')
+            navigate('/login',{replace:true})
 
         } catch (error: any) {
             console.log(error)

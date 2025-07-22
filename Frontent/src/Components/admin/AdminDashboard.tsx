@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../../Axios/AdminAxios'
 import type User from '../../types/User';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
     const [list, setList] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const navigate=useNavigate()
+    const [change,setChange]=useState('');
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -23,17 +24,41 @@ const AdminDashboard = () => {
             }
         }
         fetchUser()
-    }, [])
+    }, [change])
 
     // Filter users based on search term
-    const filteredUsers = list.filter(user => 
+    const filteredUsers = list.filter(user =>
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleEdit=async(email:string)=>{
+    const handleEdit = async (id: string) => {
         try {
-            navigate(`/admin/editUser${email}`)
+            if (!id) {
+                return
+            }
+            console.log("aaaidd", id)
+            navigate(`/admin/editUser/${id}`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDelete = async (id:string) => {
+        try {
+            console.log("delete frnt id",id)
+            console.log("calleddddddd")
+                const result =await api.post(`/admin/deleteUser/${id}`)
+                console.log("result",result.data)
+                setChange(result.data)
+        } catch (error) {
+
+        }
+    }
+
+    const handleLogout=()=>{
+        try {
+            navigate('/admin/login',{replace:true})
         } catch (error) {
             
         }
@@ -48,7 +73,7 @@ const AdminDashboard = () => {
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center">
                             <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                        
+
                         </div>
                         <div className="flex items-center space-x-4">
                             <button className="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
@@ -57,7 +82,7 @@ const AdminDashboard = () => {
                                 </svg>
                                 <span>Add User</span>
                             </button>
-                            <button className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                            <button className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2" onClick={()=>handleLogout()}>
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                 </svg>
@@ -133,9 +158,9 @@ const AdminDashboard = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
-                                                        <img 
-                                                            src={user.profile || 'https://t3.ftcdn.net/jpg/07/95/95/14/360_F_795951406_h17eywwIo36DU2L8jXtsUcEXqPeScBUq.jpg'} 
-                                                            alt={user.name} 
+                                                        <img
+                                                            src={user.profile || 'https://t3.ftcdn.net/jpg/07/95/95/14/360_F_795951406_h17eywwIo36DU2L8jXtsUcEXqPeScBUq.jpg'}
+                                                            alt={user.name}
                                                             className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
                                                         />
                                                     </div>
@@ -151,13 +176,13 @@ const AdminDashboard = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                     <div className="flex space-x-2">
-                                                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md transition-colors duration-200 flex items-center space-x-1" onClick={()=>handleEdit(user.emai)}>
+                                                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md transition-colors duration-200 flex items-center space-x-1" onClick={() => handleEdit(user._id!)}>
                                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                             </svg>
                                                             <span>Edit</span>
                                                         </button>
-                                                        <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition-colors duration-200 flex items-center space-x-1" onClick={()=>handleDelete()}>
+                                                        <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition-colors duration-200 flex items-center space-x-1" onClick={() => handleDelete(user._id!)}>
                                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                             </svg>

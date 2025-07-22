@@ -14,7 +14,7 @@ const Home = () => {
     }
 
     const logout = () => {
-        navigate('/login')
+        navigate('/login',{replace:true})
         dispatch(removeUser())
     }
 
