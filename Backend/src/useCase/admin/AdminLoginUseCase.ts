@@ -20,6 +20,9 @@ export class AdminLoginUsecase implements IAdminLoginUseCase {
             if (!existing) {
                 throw new Error("Admin not found at this email")
             }
+            if(existing.role=="user"){
+                throw new Error("Admin not found at this email")
+            }
             const comparePassword = await bcrypt.compare(password, existing?.password)
             if (!comparePassword) {
                 throw new Error("Admin password not Mat")

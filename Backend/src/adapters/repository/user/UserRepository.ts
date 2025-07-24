@@ -8,6 +8,7 @@ export class UserRepository implements IUserRepository{
         return userModal.findByIdAndDelete(id)
     }
     async createUser(user: User): Promise<User> {
+        console.log("fuckkk")
         return userModal.create(user)
     }
     async findUserByEmail(email: string): Promise<User | null> {

@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { Request, Response } from "express";
-import { admindeleteUserController, adminLoginController } from "../../DI/admin/adminInject";
+import { addUserController, admindeleteUserController, adminLoginController } from "../../DI/admin/adminInject";
 import { listUser } from "../../DI/admin/adminInject"
 import { adminUpdateController } from "../../DI/admin/adminInject"
 import { adminTokenVerify } from "../../../adapters/middlewares/admin/adminTokenVerify";
@@ -30,6 +30,10 @@ export class AdminRoute {
 
         this.adminRoutes.post('/deleteUser/:id',adminTokenVerify,checkRoleBasedToken('admin'),(req:Request,res:Response)=>{
             admindeleteUserController.deleteUser(req,res)
+        })
+
+        this.adminRoutes.post('/addUser',adminTokenVerify,checkRoleBasedToken('admin'),(req:Request,res:Response)=>{
+            addUserController.addUser(req,res)
         })
 
 
